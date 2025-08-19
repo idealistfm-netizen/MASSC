@@ -1,1 +1,1 @@
-console.log('Hello Codex!'); // trigger lint-staged fixes
+console.log('Hello Codex!');
