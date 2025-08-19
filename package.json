@@ -9,6 +9,8 @@
     "prepare": "husky",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "format:check": "prettier . --check",
+    "verify": "eslint . && npm run format:check",
     "lint-staged": "lint-staged"
   },
   "keywords": [],

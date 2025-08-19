@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint + Prettier check
+        run: npm run verify
+
+      - name: Run tests (if present, with c8 if available)
+        shell: bash
+        run: |
+          if npm run | grep -q "^  test"; then
+            echo "test script found"
+            if npx --no-install c8 --version > /dev/null 2>&1; then
+              echo "c8 detected; running with coverage"
+              npx --no-install c8 -r text -r lcov npm test
+            else
+              echo "c8 not found; running npm test"
+              npm test
+            fi
+          else
+            echo "No test script found; skipping tests"
+          fi
